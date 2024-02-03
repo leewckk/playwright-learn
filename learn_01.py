@@ -1,7 +1,9 @@
 import logging
+import asyncio
 import sys
 
 from playwright.sync_api import sync_playwright
+from playwright.async_api import async_playwright
 
 # 创建一个日志器logger并设置其日志级别为DEBUG
 logger = logging.getLogger('simple_logger')
@@ -20,7 +22,6 @@ logger.addHandler(handler)
 
 
 def usage_01():
-
     player = sync_playwright().start()
 
     # slow_mo 表示每个动作之间的间隔时间
@@ -31,8 +32,19 @@ def usage_01():
     player.stop()
 
 
+async def usage_asyncio():
+    async with async_playwright() as async_player:
+        # browser = await async_player.chromium.launch()
+        browser = await async_player.chromium.launch(headless=False, slow_mo=3000)
+        page = await browser.new_page()
+        await page.goto('https://www.baidu.com')
+        print(await page.title())
+        await browser.close()
+
+
 def main():
-    usage_01()
+    # usage_01()
+    asyncio.run(usage_asyncio())
 
 
 if __name__ == '__main__':
