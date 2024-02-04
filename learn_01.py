@@ -32,6 +32,18 @@ def usage_01():
     player.stop()
 
 
+def usage_02():
+    """
+    通过with的方式打开
+    """
+    with sync_playwright() as player:
+        # slow_mo 表示每个动作之间的间隔时间
+        browser = player.chromium.launch(headless=False, slow_mo=1000)
+        page = browser.new_page()
+        page.goto('https://www.baidu.com')
+        browser.close()
+
+
 async def usage_asyncio():
     async with async_playwright() as async_player:
         # browser = await async_player.chromium.launch()
@@ -43,7 +55,8 @@ async def usage_asyncio():
 
 
 def main():
-    # usage_01()
+    usage_01()
+    usage_02()
     asyncio.run(usage_asyncio())
 
 
